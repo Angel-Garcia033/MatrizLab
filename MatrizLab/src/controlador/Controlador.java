@@ -2,29 +2,25 @@ package controlador;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.JButton;
 
 import vista.GUI_MatrizLab;
 import modelo.*;
 
-public class Controlador extends JPanel
+public class Controlador
 {
-	private int temp = 0, Asimetrica1 = 0, Asimetrica2 = 0, a = 0, b = 0;
+	private int temp = 0, temp2 = 0, temp3 = 0, temp4 = 0, Asimetrica1 = 0, Asimetrica2 = 0, a = 0, b = 0, relaciones = 0;
 	private boolean Reflexiva, Antireflexiva, Simetrica, Asimetrica, Antisimetrica, Transitiva;
 	
 	private GUI_MatrizLab Comunicador_GUI;
 	private Matriz Comunicador_Matriz;
 	
-	private JButton [] nodos;
-	int Espacios [][];
-	private Graphics figuras;
+	private JLabel[] nodos;
+	private int[][] aristas;
 
 	public Controlador() 
 	{
@@ -39,10 +35,15 @@ public class Controlador extends JPanel
 		Comunicador_GUI.Ventana();
 	}
 	
-	public void llenarTabla ()
+	//==========================================================================
+	
+	private void llenarTabla ()
 	{
 		try 
 		{
+			int e = 0;
+			aristas = new int[relaciones][2];
+			
 			for (int i = 0; i < Comunicador_Matriz.getMatriz().length; i++) 
 			{
 				for (int j = 0; j < Comunicador_Matriz.getMatriz().length; j++) 
@@ -50,6 +51,10 @@ public class Controlador extends JPanel
 					if (Comunicador_Matriz.getMatriz()[i][j] == true) 
 					{
 						Comunicador_GUI.getTblMatriz().setValueAt(1, i, j);
+						
+						aristas [e][0]= i;
+						aristas [e][1]= j;
+						e++;
 					}			
 					else
 					{
@@ -68,7 +73,7 @@ public class Controlador extends JPanel
 		}
 	}
 	
-	public boolean comprobarReflexiva ()
+	private boolean comprobarReflexiva ()
 	{
 		for (int i = 0; i < Comunicador_Matriz.getMatriz().length; i++) 
 		{
@@ -83,7 +88,7 @@ public class Controlador extends JPanel
 		return true;
 	}
 	
-	public boolean comprobarAntireflexiva ()
+	private boolean comprobarAntireflexiva ()
 	{
 		for (int i = 0; i < Comunicador_Matriz.getMatriz().length; i++) 
 		{
@@ -98,7 +103,7 @@ public class Controlador extends JPanel
 		return true;
 	}
 	
-	public void comprobarSimetria ()
+	private void comprobarSimetria ()
 	{
 		for (int i = 0; i < Comunicador_Matriz.getMatriz().length; i++) 
 		{
@@ -149,10 +154,8 @@ public class Controlador extends JPanel
 		}
 	}
 	
-	public void comprobarTransitiva ()
-	{
-		int temp2 = 0, temp3 = 0, temp4 = 0;
-		
+	private void comprobarTransitiva ()
+	{		
 		for (int i = 0; i < Comunicador_Matriz.getMatriz().length; i++) 
 	    {
 			for (int j = 0; j < Comunicador_Matriz.getMatriz().length; j++)
@@ -166,15 +169,15 @@ public class Controlador extends JPanel
 							if (Comunicador_Matriz.getMatriz()[j][k] == true)
 							{
 								temp2++;
-							}
-		        	  
-							if (Comunicador_Matriz.getMatriz()[j][k] == true && Comunicador_Matriz.getMatriz()[i][k] == false)
-							{
-								temp3++;
-							}
-							else if (Comunicador_Matriz.getMatriz()[j][k] == true && Comunicador_Matriz.getMatriz()[i][k] == true)
-							{
-								temp4 ++;
+								
+								if (Comunicador_Matriz.getMatriz()[i][k] == false)
+								{
+									temp3++;
+								}
+								else 
+								{
+									temp4++;
+								}
 							}
 						}
 					}
@@ -186,13 +189,17 @@ public class Controlador extends JPanel
 		{
 			Transitiva = false;
 		}
+		else if (temp2 == 0 && temp3 == 0 && temp4 == 0)
+		{
+			Transitiva = false;
+		}
 		else if (temp2 == temp4 && temp2 != 0)
 		{
 			Transitiva = true;
 		}
 	}
 	
-	public void llenadoChckbx ()
+	private void llenadoChckbx ()
 	{
 		if (Reflexiva == true)
 		{
@@ -278,7 +285,7 @@ public class Controlador extends JPanel
 		}
 	}
 
-	public void crearNodos ()
+	private void crearNodos ()
 	{
 		int x = 95, y = 360, x2 = 0, y2 = 0, num;
 		String num2;
@@ -296,7 +303,7 @@ public class Controlador extends JPanel
 		angulo = 360/Comunicador_GUI.getTamano();
 		angulo = (float) Math.toRadians(angulo);
 		
-		nodos = new JButton[Comunicador_GUI.getTamano()];
+		nodos = new JLabel[Comunicador_GUI.getTamano()];
 		
 		for (int i = 0; i < Comunicador_GUI.getTamano(); i++)
 		{			
@@ -306,38 +313,35 @@ public class Controlador extends JPanel
 			x2 = (int)(x+radio*Math.cos(i * angulo));
 			y2 = (int) (y-radio * Math.sin(i * angulo));
 			
-			JButton btnNewButton = new JButton();
-			btnNewButton.setBounds(y2, x2, 50, 50);
-			btnNewButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/circle-png.png")));
+			JLabel Nodo = new JLabel(num2);
+			Nodo.setBounds(y2, x2, 50, 50);
+			Nodo.setBackground(Color.WHITE);
+			Nodo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/circle-png.png")));
 			
-			JLabel lblNewLabel = new JLabel(num2);
-			lblNewLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
-			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel.setBounds(y2, x2, 50, 50);
+			JLabel txtNum = new JLabel(num2);
+			txtNum.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
+			txtNum.setHorizontalAlignment(SwingConstants.CENTER);
+			txtNum.setBounds(y2, x2, 50, 50);
 			
-			nodos[i] = btnNewButton;
+			nodos[i] = Nodo;
 			
-			Comunicador_GUI.getPanelGrafo().add(lblNewLabel);
-			Comunicador_GUI.getPanelGrafo().add(btnNewButton);
+			Comunicador_GUI.getPanelGrafo().add(txtNum);
+			Comunicador_GUI.getPanelGrafo().add(Nodo);
 		}
 	}
 	
-	@Override
-	public void paintComponent (Graphics g)
+	private void reiniciar ()
 	{
-		super.paint(g);
-		//g.setColor(Color.BLACK)
+		Comunicador_GUI.reiniciarRelaciones();
+		Comunicador_GUI.getPanelGrafo().removeAll();
 		
-		if (a == b)
-		{
-			g.drawOval((nodos[(a-1)].getX() - 25), (nodos[(a-1)].getY() - 25), 50, 50);
-		}
-		else
-		{
-			g.drawLine(nodos[(a-1)].getX(), nodos[(a-1)].getY(), nodos[(b-1)].getX(), nodos[(b-1)].getY());
-			g.drawLine(nodos[(b-1)].getX(), nodos[(b-1)].getY(), (nodos[(b-1)].getY()+25), (nodos[(b-1)].getY()-25));
-			g.drawLine(nodos[(b-1)].getX(), nodos[(b-1)].getY(), (nodos[(b-1)].getY()-25), (nodos[(b-1)].getY()-25));
-		}
+		temp = 0;
+		temp2 = 0;
+		temp3 = 0;
+		temp4 = 0;
+		Asimetrica1 = 0;
+		Asimetrica2 = 0;
+		relaciones = 0;
 	}
 
 	// ========================================================================================================================
@@ -414,6 +418,7 @@ public class Controlador extends JPanel
 						
 						Comunicador_GUI.setRelaciones("(" + a + "," + b + ")");
 						temp++;
+						relaciones++;
 
 						Comunicador_GUI.insertarCorrecta();
 					} 
@@ -482,6 +487,7 @@ public class Controlador extends JPanel
 								
 								Comunicador_GUI.setRelaciones("(" + (i+1) + "," + (j+1) + ")");
 								temp++;
+								relaciones++;
 							} 
 						}
 					}
@@ -533,7 +539,7 @@ public class Controlador extends JPanel
 		});
 		// --------------------------------------------------------------------------------------------------------------------
 		
-		// ------------------------------Al oprimir el boton de continuar2------------------------------------------------------
+		// ------------------------------Al oprimir el boton de continuar2-----------------------------------------------------
 		Comunicador_GUI.getBtnContinuar2().addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -544,29 +550,34 @@ public class Controlador extends JPanel
 		});
 		// --------------------------------------------------------------------------------------------------------------------
 		
-		// ------------------------------Al oprimir el boton de inicio------------------------------------------------------
+		// ------------------------------Al oprimir el boton de inicio---------------------------------------------------------
 		Comunicador_GUI.getBtnInicio().addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
 				Comunicador_GUI.setOpcion(0);
 				Comunicador_GUI.Ventana();
-				Comunicador_GUI.reiniciarRelaciones();
-				Comunicador_GUI.getPanelGrafo().removeAll();
-				
-				temp = 0;
-				Asimetrica1 = 0;
-				Asimetrica2 = 0;
+				reiniciar();
 			}
 		});
 		// --------------------------------------------------------------------------------------------------------------------
 				
-		// ------------------------------Al oprimir el boton de salir------------------------------------------------------
+		// ------------------------------Al oprimir el boton de salir----------------------------------------------------------
 		Comunicador_GUI.getBtnSalir().addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
 				System.exit(0);
+			}
+		});
+		// --------------------------------------------------------------------------------------------------------------------
+		
+		// ------------------------------Al oprimir el boton de imprimirAristas------------------------------------------------
+		Comunicador_GUI.getBtnAristas().addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				Comunicador_GUI.crearAristas(aristas, nodos, relaciones);
 			}
 		});
 		// --------------------------------------------------------------------------------------------------------------------
