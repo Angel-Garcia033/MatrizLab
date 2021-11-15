@@ -271,7 +271,7 @@ public class GUI_MatrizLab extends JFrame
 	
 	//==========================================================================
 	
-	public void Menu ()
+	private void Menu ()
 	{
 		Panel_Menu.setBounds(0, 0, 826, 455);
 		Panel_Menu.setBackground(Color.ORANGE);
@@ -305,7 +305,7 @@ public class GUI_MatrizLab extends JFrame
 		this.getContentPane().add(Panel_Menu);
 	}
 
-	public void Matriz ()
+	private void Matriz ()
 	{
 		Panel_Matriz.setBounds(0, 0, 826, 455);
 		Panel_Matriz.setBackground(Color.ORANGE);
@@ -370,7 +370,7 @@ public class GUI_MatrizLab extends JFrame
 		this.getContentPane().add(Panel_Matriz);
 	}
 	
-	public void Relaciones ()
+	private void Relaciones ()
 	{
 		Panel_Relaciones.setBounds(0, 0, 826, 455);
 		Panel_Relaciones.setBackground(Color.ORANGE);
@@ -414,7 +414,7 @@ public class GUI_MatrizLab extends JFrame
 		this.getContentPane().add(Panel_Relaciones);
 	}
 	
-	public void tipoRelaciones ()
+	private void tipoRelaciones ()
 	{
 		Panel_TipoR.setBounds(0, 0, 826, 455);
 		Panel_TipoR.setBackground(Color.ORANGE);
@@ -557,7 +557,7 @@ public class GUI_MatrizLab extends JFrame
 		this.getContentPane().add(Panel_TipoR);
 	}
 	
-	public void Grafo ()
+	private void Grafo ()
 	{
 		Panel_Grafo.setBounds(0, 0, 826, 455);
 		Panel_Grafo.setBackground(Color.ORANGE);
